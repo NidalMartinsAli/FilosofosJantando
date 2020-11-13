@@ -3,7 +3,7 @@
 #include <semaphore.h>
 #include <pthread.h>
 #include <time.h>
-
+  
 #define PENSAR 0        //Id para estado pensando
 #define ESPERAR 1       //Id para estado esperando
 #define COMER 2         //Id para estado comendo
@@ -53,6 +53,12 @@ void main (){
         garfo = (sem_t*)malloc((qFilo)*sizeof(sem_t));    //Aloca a quantidade de garfos = quantidade de filósofos
         macarrao = (sem_t*)malloc((qMacarrao)*sizeof(sem_t)); //Aloca a quantidade de macarrão
         estado = (int*)malloc((qFilo)*sizeof(int));     //Aloca o vetor de estado dos filósofos	
+
+        sem_init(&macarrao, 0, qMacarrao); //semaforo do macarrao
+        
+        for (int i=0, i<qFilo; i++){
+        	 sem_init(&macarrao[i], 0, 2); //semaforo dos garfos
+        }
 
 
 

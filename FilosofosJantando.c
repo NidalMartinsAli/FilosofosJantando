@@ -3,8 +3,6 @@
 #include <semaphore.h>
 #include <pthread.h>
 #include <time.h>
-  
-  //teste
 
 #define PENSAR 0        //Id para estado pensando
 #define ESPERAR 1       //Id para estado esperando

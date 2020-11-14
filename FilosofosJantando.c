@@ -95,7 +95,7 @@ void *filosofo(void *F){
 	 NFilosofos Filo = *(NFilosofos*) F;
        
         while (1){
-                mostrar(Filo.id);
+                mostrar(Filo->id);
                 usleep(Filo->tempoPensar * 1000);
                 comer(Filo);
                 usleep(Filo->tempoPensar * 1000); 

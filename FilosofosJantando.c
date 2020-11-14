@@ -13,6 +13,7 @@
         int quantidadeM;			  //Quantidade de macarrão
         int id;                 	  //Índice do filósofo
         int tempoPensar;			 //tempo que o filóso tem para pensar
+}
 
 int *estado;            //Vetor que armazena os estados de cada thread
 sem_t macarrao;        //Representa a comida que os filosofos irão comer

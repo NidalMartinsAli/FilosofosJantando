@@ -7,13 +7,15 @@
 #define PENSAR 0        //Id para estado pensando
 #define ESPERAR 1       //Id para estado esperando
 #define COMER 2         //Id para estado comendo
+ 
+typedef struct nfilosofos{      //Estrutura de dados dos filósofos
+        int quantidadeF;              //Quantidade de filósofos
+        int quantidadeM;			//Quantidade de macarrão
+        int id;                 //Índice do filósofo
+        int tempoPensar;
+      
 
- typedef struct nfilosofos{      //Estrutura de dados dos filósofos
-        //int quantidadeF;              //Quantidade de filósofos \\ é necessário? pode causar desperdicio de memória
-        int quantidadeM;			  //Quantidade de macarrão
-        int id;                 	  //Índice do filósofo
-        int tempoPensar;			 //tempo que o filóso tem para pensar
-}
+}NFilosofos;
 
 int *estado;            //Vetor que armazena os estados de cada thread
 sem_t macarrao;        //Representa a comida que os filosofos irão comer
@@ -48,11 +50,9 @@ void main (){
 			break;
 		}
 
-
-        vetorFilo = (NFilosofos*) malloc ((qFilo)*sizeof(NFilosofos));  //Aloca vetor de filósofos
+		vetorFilo = (NFilosofos*) malloc ((qFilo)*sizeof(NFilosofos));  //Aloca vetor de filósofos
         thFilo = (pthread_t*) malloc ((qFilo)*sizeof(pthread_t));   //Aloca vetor de threads
         garfo = (sem_t*)malloc((qFilo)*sizeof(sem_t));    //Aloca a quantidade de garfos = quantidade de filósofos
-        macarrao = (sem_t*)malloc((qMacarrao)*sizeof(sem_t)); //Aloca a quantidade de macarrão
         estado = (int*)malloc((qFilo)*sizeof(int));     //Aloca o vetor de estado dos filósofos	
 
         sem_init(&macarrao, 0, qMacarrao); //semaforo do macarrao
@@ -61,9 +61,20 @@ void main (){
         	 sem_init(&macarrao[i], 0, 2); //semaforo dos garfos
         }
 
+        for (i=0;i<quantFilo;i++){         //Inicializa o vetor com os dados dos filósofos
+            vetorFilo[i].quantidadeF = qfilo;
+        	vFilo[i].tempoP = tPensar + (rand() % (tPensar/2)); //tempo aleatório para pensar
+       
+        }
+        vFilo[i].id = i + 1;
+        estado[i] = PENSAR;         //Inicializa cada filósofo com o estado PENSAR
+        pthread_create (&thFilo[i],NULL,filosofo,&vetorFilo[i]);   //Cria os filósofos
+       
+        }
 
 
 
+        
 
 
 

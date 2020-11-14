@@ -135,7 +135,7 @@ void comer(void *F){
 
     //larga os garfos
     sem_post(&(garfo[Filo->id]));
-    if(Filo->id==Filo->quantidadeF-1)
+    if(Filo->id==Filo->quantidadeF-1) //verifica se é o ultimo elemento do vetor
         sem_post(&(garfo[0]));
     else
         sem_post(&(garfo[Filo->id+1]));
@@ -144,20 +144,22 @@ void comer(void *F){
 
 //problema no esperar... problema na condição de verificar 2 garfos
 // esta liberando o semaforo muitas vezes, precisa utilizar o signal.
+
+//tenta pegar 2 garfos e vai para função comer
 void esperar(void *F){
     NFilosofos *Filo = (NFilosofos*) F;
 
-    if(Filo->id==Filo->quantidadeF-1){      //verifica se está no limite do vetor 
-        if((!sem_wait(&(garfo[Filo->id]))) && (!sem_wait(&(garfo[0])))){ //verifica se há 2 garfos disponiveis
+    if(Filo->id==Filo->quantidadeF-1){          //verifica se está no limite do vetor 
+        if((!sem_wait(&(garfo[Filo->id]))) && (!sem_wait(&(garfo[0])))){ //verifica se há 2 garfos disponiveis e os pega
             comer(F);
         }
         else{
             printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
-            sem_post(&(garfo[Filo->id]));
-            if(Filo->id==Filo->quantidadeF-1)
-                sem_post(&(garfo[0]));
+            sem_post(&(garfo[Filo->id]));       //libera o garfo esquerda 
+            if(Filo->id==Filo->quantidadeF-1)   //verifica se está no limite do vetor 
+                sem_post(&(garfo[0]));          //libera o garfo direita 
             else
-                sem_post(&(garfo[Filo->id+1]));
+                sem_post(&(garfo[Filo->id+1])); //libera o garfo direita 
         }
     }
     else{
@@ -166,11 +168,11 @@ void esperar(void *F){
         }
         else{
             printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
-            sem_post(&(garfo[Filo->id]));
-            if(Filo->id==Filo->quantidadeF-1)
-                sem_post(&(garfo[0]));
+            sem_post(&(garfo[Filo->id]));       //libera o garfo esquerda 
+            if(Filo->id==Filo->quantidadeF-1)   //verifica se está no limite do vetor 
+                sem_post(&(garfo[0]));          //libera o garfo direita 
             else
-                sem_post(&(garfo[Filo->id+1]));
+                sem_post(&(garfo[Filo->id+1])); //libera o garfo direita 
         }
     }
 

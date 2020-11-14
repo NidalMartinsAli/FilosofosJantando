@@ -26,7 +26,7 @@ sem_t *garfo;           //Vetor que representa os garfos
  
  	void *filosofo (void *F);
 	void comer (void *F);
-//	void esperar (NFilosofos F);
+	void esperar (void *F);
 	void pensar (void *F);
 //	void mostrar (int i);
 //	void teste (int i,int quantidade);
@@ -60,7 +60,7 @@ void main (){
         sem_init(&macarrao, 0, ABERTO); //semaforo do macarrao
         
         for (i=0; i<qFilo; i++){
-        	 sem_init(&garfo[i], 0, 2); //semaforo dos garfos
+        	 sem_init(&garfo[i], 0, ABERTO); //semaforo dos garfos
         }
 
         for (i=0;i<qFilo;i++){         //Inicializa o vetor com os dados dos filósofos
@@ -95,7 +95,7 @@ void *filosofo(void *F){
        
         while (1){
                 pensar(F); 
-                comer(F);    
+                esperar(F);    
         }
 }
 
@@ -105,11 +105,11 @@ void pensar(void *F){
     NFilosofos *Filo = (NFilosofos*) F;
 
     int tempo;
-    tempo=(rand() % 5+1);           //tempo para pensar
+    tempo=(rand() % 2+1);           //tempo para pensar
 
     printf("\nfilosofo %d a pensar por %ds", Filo->id,tempo);
 
-    usleep(tempo*1000000);          //deixa o filosofo pensando por alguns milissegundos
+    usleep(tempo*100000);          //deixa o filosofo pensando por alguns milissegundos
     Filo->quantidadeM = tempo; //quantidade de macarrao que irá comer na proxima vez
 
     
@@ -120,7 +120,7 @@ void comer(void *F){
     NFilosofos *Filo = (NFilosofos*) F;
 
     sem_wait(&(macarrao));      //bloqueia o semaforo do macarrao
-
+    
     if(qMacarrao <=0){          //verifica se ainda há macarrão
         printf("\nFilosofo %d foi tentar comer %d, mas Macarrao acabou",Filo->id,Filo->quantidadeM);
         exit(1);
@@ -132,8 +132,50 @@ void comer(void *F){
     printf("\nFilosofo %d comeu %d Macarrao total %d",Filo->id,Filo->quantidadeM,qMacarrao);
 
     sem_post(&(macarrao));      //desbloqueia o semaforo 
+
+    //larga os garfos
+    sem_post(&(garfo[Filo->id]));
+    if(Filo->id==Filo->quantidadeF-1)
+        sem_post(&(garfo[0]));
+    else
+        sem_post(&(garfo[Filo->id+1]));
 }
 
+
+//problema no esperar... problema na condição de verificar 2 garfos
+// esta liberando o semaforo muitas vezes, precisa utilizar o signal.
+void esperar(void *F){
+    NFilosofos *Filo = (NFilosofos*) F;
+
+    if(Filo->id==Filo->quantidadeF-1){      //verifica se está no limite do vetor 
+        if((!sem_wait(&(garfo[Filo->id]))) && (!sem_wait(&(garfo[0])))){ //verifica se há 2 garfos disponiveis
+            comer(F);
+        }
+        else{
+            printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
+            sem_post(&(garfo[Filo->id]));
+            if(Filo->id==Filo->quantidadeF-1)
+                sem_post(&(garfo[0]));
+            else
+                sem_post(&(garfo[Filo->id+1]));
+        }
+    }
+    else{
+        if((!sem_wait(&(garfo[Filo->id]))) && (!sem_wait(&(garfo[Filo->id+1])))){
+            comer(F);
+        }
+        else{
+            printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
+            sem_post(&(garfo[Filo->id]));
+            if(Filo->id==Filo->quantidadeF-1)
+                sem_post(&(garfo[0]));
+            else
+                sem_post(&(garfo[Filo->id+1]));
+        }
+    }
+
+    
+}
 
 
 

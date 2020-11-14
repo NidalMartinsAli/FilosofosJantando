@@ -7,12 +7,12 @@
 #define PENSAR 0        //Id para estado pensando
 #define ESPERAR 1       //Id para estado esperando
 #define COMER 2         //Id para estado comendo
- 
-typedef struct nfilosofos{      //Estrutura de dados dos filósofos
-        int quantidadeF;              //Quantidade de filósofos
-        int quantidadeM;			//Quantidade de macarrão
-        int id;                 //Índice do filósofo
-}NFilosofos;
+
+ typedef struct nfilosofos{      //Estrutura de dados dos filósofos
+        //int quantidadeF;              //Quantidade de filósofos \\ é necessário? pode causar desperdicio de memória
+        int quantidadeM;			  //Quantidade de macarrão
+        int id;                 	  //Índice do filósofo
+        int tempoPensar;			 //tempo que o filóso tem para pensar
 
 int *estado;            //Vetor que armazena os estados de cada thread
 sem_t macarrao;        //Representa a comida que os filosofos irão comer

@@ -14,7 +14,7 @@ typedef struct nfilosofos{      //Estrutura de dados dos filósofos
         int id;                 //Índice do filósofo
         int tempoPensar;		// Tempo de cada filosofo para pensar
       	int estado;				// estado em que se encontra o filosofo
-
+      	
 }NFilosofos;
 
 int *estado;            //Vetor que armazena os estados de cada thread
@@ -57,7 +57,7 @@ void main (){
         sem_init(&macarrao, 0, qMacarrao); //semaforo do macarrao
         
         for (int i=0, i<qFilo; i++){
-        	 sem_init(&macarrao[i], 0, 2); //semaforo dos garfos
+        	 sem_init(&garfo[i], 0, 2); //semaforo dos garfos
         }
 
         for (i=0;i<quantFilo;i++){         //Inicializa o vetor com os dados dos filósofos
@@ -90,13 +90,20 @@ void main (){
 
 
 //função destinada a criação da thread filosofo e ao ato de pensar inicial
-void *filsofo(void *F, int quant_Filosofo){
-	for (int i = 0; i < quant_Filosofo; ++i)
-	{
-		F[i].quantidadeF=quant_Filosofo;
-		F[i].
-	}
+void *filosofo(void *F){
+	 
+	 NFilosofos Filo = *(NFilosofos*) F;
+       
+        while (1){
+                mostrar(Filo.id);
+                usleep(Filo.tempoPensar * 1000);
+                comer(Filo);
+                usleep(Filo.tempoPensar * 1000); 
+        	esperar(Filo)
+        }
 }
+
+
 //cria o pensamento do filosofo
 void *pensar(void *F){
 	
@@ -132,4 +139,3 @@ void *pensar(void *F){
 
 
 }
-  

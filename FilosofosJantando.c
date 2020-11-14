@@ -65,7 +65,7 @@ void main (){
             vetorFilo[i].tempoPensar = rand() % 1000  //tempo aleatório para pensar
       
        	    vetorFilo[i].id = i;		//indice do filosofo
-            estado[i] = PENSAR;         //cada filosofo inicia no estado pensar
+            vetorFilo[i].estado[i] = PENSAR;         //cada filosofo inicia no estado pensar
             pthread_create (&thFilo[i],NULL,filosofo,&vetorFilo[i]);   //Cria as threads filósofos
 	}
 

@@ -50,7 +50,7 @@ void main (){
 			break;
 		}
 
-		vetorFilo = (NFilosofos*) malloc ((qFilo)*sizeof(NFilosofos));  //Aloca vetor de filósofos
+	vetorFilo = (NFilosofos*) malloc ((qFilo)*sizeof(NFilosofos));  //Aloca vetor de filósofos
         thFilo = (pthread_t*) malloc ((qFilo)*sizeof(pthread_t));   //Aloca vetor de threads
         garfo = (sem_t*)malloc((qFilo)*sizeof(sem_t));    //Aloca a quantidade de garfos = quantidade de filósofos
         estado = (int*)malloc((qFilo)*sizeof(int));     //Aloca o vetor de estado dos filósofos	
@@ -63,12 +63,12 @@ void main (){
 
         for (i=0;i<quantFilo;i++){         //Inicializa o vetor com os dados dos filósofos
             vetorFilo[i].quantidadeF = qfilo;
-        	vetorFilo[i].tempoPensar = rand() % 1000  //tempo aleatório para pensar
+            vetorFilo[i].tempoPensar = rand() % 1000  //tempo aleatório para pensar
        
         }
         vFilo[i].id = i + 1;
-        estado[i] = PENSAR;         //Inicializa cada filósofo com o estado PENSAR
-        pthread_create (&thFilo[i],NULL,filosofo,&vetorFilo[i]);   //Cria os filósofos
+        estado[i] = PENSAR;         //cada filosofo inicia no estado pensar
+        pthread_create (&thFilo[i],NULL,filosofo,&vetorFilo[i]);   //Cria as threads filósofos
        
 
       	for (i=0;i<qFilo;i++){            //Faz um join nos filósofos

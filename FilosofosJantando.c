@@ -90,6 +90,27 @@ void main (){
 
 
 
+//função destinada a criação da thread filosofo e ao ato de pensar inicial
+void *filsofo(void *F, int quant_Filosofo){
+	for (int i = 0; i < quant_Filosofo; ++i)
+	{
+		F[i].quantidadeF=quant_Filosofo;
+		F[i].
+	}
+}
+//cria o pensamento do filosofo
+void *pensar(void *F){
+	
+	srand(time(NULL)); 				//atribui uma semente nova a cada execução da função rand
+	
+	F->tempoPensar = rand() % 60;  //atribui a cada filosofo um segundo randon para pensamento
+		 
+	printf("filosofo %d a pensar", F->id)
+
+
+}
+
+
 
 
 

@@ -96,26 +96,23 @@ void *filosofo(void *F){
        
         while (1){
                 mostrar(Filo->id);
-                usleep(Filo->tempoPensar * 1000);
-                comer(Filo);
-                usleep(Filo->tempoPensar * 1000); 
-        	esperar(Filo)
+                pensar(Filo->id);
+                comer(Filo);       
         }
 }
 
 
 //cria o pensamento do filosofo
-void *pensar(void *F){
-	
-	srand(time(NULL)); 				//atribui uma semente nova a cada execução da função rand
-	
-	F->tempoPensar = rand() % 60;  //atribui a cada filosofo um segundo randon para pensamento
-		 
-	printf("filosofo %d a pensar", F->id)
+void pensar(int id){
 
+	int tempo;
+	srand(time(NULL)); 		//atribui uma semente nova a cada execução da função rand
+	tempo=rand() % 1000;
+	usleep(tempo); 			//deixa o filosofo pensando por alguns milissegundos
+		 
+	printf("filosofo %d a pensar por %ds", id,tempo);
 
 }
-
 
 
 

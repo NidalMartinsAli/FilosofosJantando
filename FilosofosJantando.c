@@ -63,7 +63,7 @@ void main (){
 
         for (i=0;i<quantFilo;i++){         //Inicializa o vetor com os dados dos filósofos
             vetorFilo[i].quantidadeF = qfilo;
-        	vFilo[i].tempoP = tPensar + (rand() % (tPensar/2)); //tempo aleatório para pensar
+            vetorFilo[i].tempoPensar = rand() % 1000  //tempo aleatório para pensar
        
         }
         vFilo[i].id = i + 1;

@@ -65,11 +65,11 @@ void main (){
             vetorFilo[i].quantidadeF = qfilo;
             vetorFilo[i].tempoPensar = rand() % 1000  //tempo aleatório para pensar
        
-        }
+        
         vFilo[i].id = i + 1;
         estado[i] = PENSAR;         //cada filosofo inicia no estado pensar
         pthread_create (&thFilo[i],NULL,filosofo,&vetorFilo[i]);   //Cria as threads filósofos
-       
+	}
 
       	for (i=0;i<qFilo;i++){            //Faz um join nos filósofos
             pthread_join (thFilo[i],NULL);

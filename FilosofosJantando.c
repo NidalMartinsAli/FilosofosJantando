@@ -91,9 +91,7 @@ void *filosofo(void *F){
 	 NFilosofos Filo = *(NFilosofos*) F;
        
         while (1){
-                mostrar(Filo.id);
-                pensar(Filo->id);
-                comer(Filo);       
+                pensar(Filo.id);     
         }
 }
 
@@ -101,12 +99,12 @@ void *filosofo(void *F){
 //cria o pensamento do filosofo
 void pensar(int id){
 
-	int tempo;
-	srand(time(NULL)); 		//atribui uma semente nova a cada execução da função rand
-	tempo=rand() % 1000;
-	usleep(tempo); 			//deixa o filosofo pensando por alguns milissegundos
-		 
-	printf("filosofo %d a pensar por %ds", id,tempo);
+    int tempo;
+    tempo=(rand() % 5+1);
+    usleep(tempo*1000000);          //deixa o filosofo pensando por alguns milissegundos
+         
+    printf("\nfilosofo %d a pensar por %ds", id,tempo);
+
 
 }
 

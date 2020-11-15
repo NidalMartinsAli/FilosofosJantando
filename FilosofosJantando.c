@@ -1,12 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <semaphore.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <time.h>
 
 #define FECHADO 0       //Id para estado semaforo
 #define ABERTO 1        //Id para estado semaforo
 
+  
+#define PENSAR 0        //Id para estado pensando
+#define ESPERAR 1       //Id para estado esperando
+#define COMER 2         //Id para estado comendo
  
 typedef struct nfilosofos{      //Estrutura de dados dos filósofos
         int quantidadeF;              //Quantidade de filósofos
@@ -28,6 +33,8 @@ pthread_mutex_t m, *g;  //mutex para os garfos e macarrão
     void pega_garfos_limite(void *F);
     void pega_garfos(void *F);
     void larga_garfos(void *F);
+//	void mostrar (int i);
+//	void teste (int i,int quantidade);
 
 
 void main (){
@@ -112,11 +119,11 @@ void pensar(void *F){
     NFilosofos *Filo = (NFilosofos*) F;
 
     int tempo;
-    tempo=(rand() % 5+1);           //tempo para pensar
+    tempo=(rand() % 2+1);           //tempo para pensar
 
-    printf("\nfilosofo %d a pensar por %ds\n", Filo->id,tempo);
+    printf("\nfilosofo %d a pensar por %ds", Filo->id,tempo);
 
-    usleep(tempo*1000000);          //deixa o filosofo pensando por alguns milissegundos
+    usleep(tempo*100000);          //deixa o filosofo pensando por alguns segundos
     Filo->quantidadeM = tempo; //quantidade de macarrao que irá comer na proxima vez
 
     
@@ -130,14 +137,14 @@ void comer(void *F){
     pthread_mutex_lock(&(m));   //bloqueia a seção critica do macarrao
     
     if(qMacarrao <=0){          //verifica se ainda há macarrão
-        printf("\nFilosofo %d foi tentar comer %d, mas Macarrao acabou\n",Filo->id,Filo->quantidadeM);
+        printf("\nFilosofo %d foi tentar comer %d, mas Macarrao acabou",Filo->id,Filo->quantidadeM);
         exit(1);
     }
     qMacarrao = qMacarrao- Filo->quantidadeM;   // decrementa do macarrão
     if(qMacarrao<=0){           //para não ter macarrão negativo
         qMacarrao=0;
     }
-    printf("\nFilosofo %d comeu %d Macarrao total %d\n",Filo->id,Filo->quantidadeM,qMacarrao);
+    printf("\nFilosofo %d comeu %d Macarrao total %d",Filo->id,Filo->quantidadeM,qMacarrao);
     pthread_mutex_unlock(&(m)); //desbloqueia o macarrao
     sem_post(&(macarrao));      //libera o semaforo 
 
@@ -153,19 +160,19 @@ void comer(void *F){
 //caso não consiga pegar 2 garfos, fica esperando 1s
 void esperar(void *F){
     NFilosofos *Filo = (NFilosofos*) F;
-    int *aux1,*aux2;                            //auxiliar que armazena o estado do semaforo
+    int aux1,aux2;                            //auxiliar que armazena o estado do semaforo
 
     if(Filo->id==Filo->quantidadeF-1){          //verifica se está no limite do vetor
         sem_getvalue(&(garfo[Filo->id]),&aux1); //armazena em aux o estado do semaforo
         sem_getvalue(&(garfo[0]),&aux2);        //armazena em aux o estado do semaforo
 
-        if(aux1==1 && aux2==1){                 //verifica se tem 2 garfos disponiveis
+        if((aux1)==1 &&  (aux2)==1){                 //verifica se tem 2 garfos disponiveis
             pega_garfos_limite(F);           
             comer(F);
         }
         else{                                   //se não houver 1 ou 0 garfos disponiveis espera 1s
-            printf("\nFilosofo %d ESPERANDO 2 GARFOS\n", Filo->id);
-            usleep(1*1000000);                  //dorme por 1s
+            printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
+            usleep(1);
             esperar(F);
         }
     }
@@ -178,8 +185,8 @@ void esperar(void *F){
             comer(F);
         }
         else{                                   //se não houver 1 ou 0 garfos disponiveis espera 1s
-            printf("\nFilosofo %d ESPERANDO 2 GARFOS\n", Filo->id);
-            usleep(1*1000000);                  //dorme por 1s
+            printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
+            usleep(1);
             esperar(F); 
             
         }
@@ -233,3 +240,12 @@ void larga_garfos(void *F){
         sem_post(&(garfo[Filo->id+1]));         //libera o garfo da direita
     }
 }
+
+
+
+
+
+
+
+
+

@@ -7,18 +7,11 @@
 
 #define FECHADO 0       //Id para estado semaforo
 #define ABERTO 1        //Id para estado semaforo
-
-  
-#define PENSAR 0        //Id para estado pensando
-#define ESPERAR 1       //Id para estado esperando
-#define COMER 2         //Id para estado comendo
  
 typedef struct nfilosofos{      //Estrutura de dados dos filósofos
         int quantidadeF;              //Quantidade de filósofos
         int quantidadeM;			//Quantidade de macarrão
         int id;                 //Índice do filósofo
-      	int estado;				// estado em que se encontra o filosofo
-      	
 }NFilosofos;
 
 int qMacarrao;          // quantidade de macarrão no prato central
@@ -46,7 +39,7 @@ void main (){
 		scanf("%d", &qFilo);
 		
 		if(qFilo<1){
-			printf("ERRO! Não há filósofos o suficiente.");
+			printf("\nERRO! Não há filósofos o suficiente.");
 			return;
 		}
 		
@@ -54,7 +47,7 @@ void main (){
 		scanf("%d", &qMacarrao);
 		
 		if(qMacarrao<1){
-			printf("ERRO! Não há comida o suficiente.");
+			printf("\nERRO! Não há comida o suficiente.");
 			return;
 		}
 
@@ -78,7 +71,6 @@ void main (){
             vetorFilo[i].quantidadeF = qFilo;
       
        	    vetorFilo[i].id = i;		       //indice do filosofo
-            vetorFilo[i].estado = PENSAR;      //cada filosofo inicia no estado pensar
             pthread_create (&thFilo[i],NULL,filosofo,&vetorFilo[i]);   //Cria as threads filósofos
 	}
 
@@ -121,7 +113,7 @@ void pensar(void *F){
     int tempo;
     tempo=(rand() % 2+1);           //tempo para pensar
 
-    printf("\nfilosofo %d a pensar por %ds", Filo->id,tempo);
+    printf("\nfilosofo %d a pensar por %ds\n", Filo->id,tempo);
 
     usleep(tempo*100000);          //deixa o filosofo pensando por alguns segundos
     Filo->quantidadeM = tempo; //quantidade de macarrao que irá comer na proxima vez
@@ -137,14 +129,14 @@ void comer(void *F){
     pthread_mutex_lock(&(m));   //bloqueia a seção critica do macarrao
     
     if(qMacarrao <=0){          //verifica se ainda há macarrão
-        printf("\nFilosofo %d foi tentar comer %d, mas Macarrao acabou",Filo->id,Filo->quantidadeM);
+        printf("\nFilosofo %d foi tentar comer %d, mas Macarrao acabou\n",Filo->id,Filo->quantidadeM);
         exit(1);
     }
     qMacarrao = qMacarrao- Filo->quantidadeM;   // decrementa do macarrão
     if(qMacarrao<=0){           //para não ter macarrão negativo
         qMacarrao=0;
     }
-    printf("\nFilosofo %d comeu %d Macarrao total %d",Filo->id,Filo->quantidadeM,qMacarrao);
+    printf("\nFilosofo %d comeu %d Macarrao total %d \n",Filo->id,Filo->quantidadeM,qMacarrao);
     pthread_mutex_unlock(&(m)); //desbloqueia o macarrao
     sem_post(&(macarrao));      //libera o semaforo 
 
@@ -171,7 +163,7 @@ void esperar(void *F){
             comer(F);
         }
         else{                                   //se não houver 1 ou 0 garfos disponiveis espera 1s
-            printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
+            printf("\nFilosofo %d ESPERANDO 2 GARFOS\n", Filo->id);
             usleep(1);
             esperar(F);
         }
@@ -185,7 +177,7 @@ void esperar(void *F){
             comer(F);
         }
         else{                                   //se não houver 1 ou 0 garfos disponiveis espera 1s
-            printf("\nFilosofo %d ESPERANDO 2 GARFOS", Filo->id);
+            printf("\nFilosofo %d ESPERANDO 2 GARFOS\n", Filo->id);
             usleep(1);
             esperar(F); 
             
@@ -240,12 +232,3 @@ void larga_garfos(void *F){
         sem_post(&(garfo[Filo->id+1]));         //libera o garfo da direita
     }
 }
-
-
-
-
-
-
-
-
-
